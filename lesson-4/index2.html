@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+   
+            <script>
+             /*    Подумать над глобальными сущностями. К примеру, сущность «Продукт» в интернет-магазине актуальна не только для корзины, но и для каталога. 
+             Стремиться нужно к тому, чтобы объект «Продукт» имел единую структуру для различных модулей сайта, но в разных местах давал возможность вызывать разные методы. */    
+            
+             /**
+ * Объект "Каталог".
+ * 
+ * NOTE: Ключом выступает ID товара для быстрого доступа к товару без поиска по индексу.
+ */
+const catalog = {
+    1: { 
+        id: 1,
+        title: 'Футболка', 
+        price: 999,
+    }, 
+    2: { 
+        id: 2,
+        title: 'Джинсы', 
+        price: 7900,
+    },
+    3: { 
+        id: 3,
+        title: 'Кроссовки', 
+        price: 10990,
+    },
+}
+
+/**
+ * Объект "Корзина".
+ */
+const cart = {
+    /**
+     * Идентификаторы товаров, добавленных в корзину.
+     */
+    items: [
+        { 
+            id: 1, 
+            quantity: 3, 
+        }, 
+        { 
+            id: 3, 
+            quantity: 1, 
+        },
+    ],
+
+    /**
+     * Функция выполняет добавление товара по индентификатору.
+     * 
+     * @param id {number} Идентификатор товара.
+     */
+    add(id) {
+        const index = this.items.findIndex(function (item) {
+            return item.id === id
+        })
+
+        if (index) {
+            this.items[index].quantity += 1
+        } else {
+            this.items.push({
+                id: id,
+                quantity: 1
+            })
+        }
+    },
+
+    /**
+     * Функция выполняет удаление товара по индентификатору.
+     * 
+     * @param id {number} Идентификатор товара.
+     */
+    remove(id) {
+        const index = this.items.findIndex(function (item) {
+            return item.id === id
+        })
+
+        if (index) {
+            this.items.splice(index, 1)
+        }
+    },
+
+    /**
+     * Функция выполняет подсчет итоговой стоимости товаров в корзине.
+     *
+     * @returns {number} Возвращает сумму итоговой стоимости товаров в корзине.
+     */
+    getTotalPrice() {
+        let result = 0;
+
+        /* используем цикл for of, общаясь через this к свойству добавленных товаров, 
+         * чтобы посчитать итоговую стоимость товаров */
+        for (let item of this.items) {
+            /* получаем полный объект товара из каталога,
+             * для того чтобы получить цену */
+            result += catalog[item.id].price;
+        }
+
+        return result;
+    }
+};
+
+/* подсчитываем итоговую стоимость,
+ * вызывая функцию подсчета у объекта cart */
+const total = cart.getTotalPrice();
+
+/* выводим итоговую стоимость в консоль */
+console.log(total);
+              
+            </script>
+
+   
+</body>
+
+</html>
